@@ -96,9 +96,9 @@ def accuracy(typed, source):
     "*** YOUR CODE HERE ***"
     # END PROBLEM 3
     score, count = 0.0, 0
-    if len(typed_words) == len(source_words)==0 :
+    if len(typed_words) == len(source_words) == 0:
         score = 100.0
-    elif len(typed_words)==0 or len(source_words)==0:
+    elif len(typed_words) == 0 or len(source_words) == 0:
         score = 0.0
     else:
         for t, s in zip(typed_words, source_words):
@@ -152,6 +152,13 @@ def autocorrect(typed_word, word_list, diff_function, limit):
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
     # END PROBLEM 5
+    if typed_word in word_list:
+        return typed_word
+    diff_list = [diff_function(typed_word, word, limit) for word in word_list]
+    if min(diff_list) > limit:
+        return typed_word
+    else:
+        return word_list[diff_list.index(min(diff_list))]
 
 
 def feline_fixes(typed, source, limit):
@@ -177,8 +184,28 @@ def feline_fixes(typed, source, limit):
     5
     """
     # BEGIN PROBLEM 6
-    assert False, 'Remove this line'
+    # assert False, 'Remove this line'
     # END PROBLEM 6
+
+    def check(str_typed, str_source, total):
+        if total > limit:
+            return limit+1
+        elif not str_typed and not str_source:
+            return total
+        elif not str_typed or not str_source:
+            return check(str_typed[1:], str_source[1:], total+1)
+        elif str_typed[0] != str_source[0]:
+            return check(str_typed[1:], str_source[1:], total+1)
+        else:
+            return check(str_typed[1:], str_source[1:], total)
+    return check(typed, source, 0)
+
+    ### solution for loop
+    # total=len(source)-len(typed)
+    # for s,s1 in zip(typed,source):
+    #     if s!=s1:total+=1
+    # if total>limit:return limit+1
+    # return total
 
 
 def minimum_mewtations(start, goal, limit):
@@ -196,21 +223,24 @@ def minimum_mewtations(start, goal, limit):
     >>> minimum_mewtations("ckiteus", "kittens", big_limit) # ckiteus -> kiteus -> kitteus -> kittens
     3
     """
-    assert False, 'Remove this line'
-    if ______________:  # Fill in the condition
+    # assert False, 'Remove this line'
+    if limit<0: return 0; # Fill in the condition
         # BEGIN
-        "*** YOUR CODE HERE ***"
+        # "*** YOUR CODE HERE ***"
         # END
-    elif ___________:  # Feel free to remove or add additional cases
+    elif not start and not goal:  return 0# Feel free to remove or add additional cases
         # BEGIN
-        "*** YOUR CODE HERE ***"
+        # "*** YOUR CODE HERE ***"
         # END
+    elif not start or not goal: return abs(len(start)-len(goal))
+    elif start[0]==goal[0]: return minimum_mewtations(start[1:],goal[1:],limit)
     else:
-        add = ...  # Fill in these lines
-        remove = ...
-        substitute = ...
+        add = minimum_mewtations(start,goal[1:],limit-1)  # Fill in these lines
+        remove = minimum_mewtations(start[1:],goal,limit-1)
+        substitute = minimum_mewtations(start[1:],goal[1:],limit-1)
+        return min(add,remove,substitute)+1
         # BEGIN
-        "*** YOUR CODE HERE ***"
+        # "*** YOUR CODE HERE ***"
         # END
 
 
