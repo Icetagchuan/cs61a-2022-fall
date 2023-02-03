@@ -200,7 +200,7 @@ def feline_fixes(typed, source, limit):
             return check(str_typed[1:], str_source[1:], total)
     return check(typed, source, 0)
 
-    ### solution for loop
+    # solution for loop
     # total=len(source)-len(typed)
     # for s,s1 in zip(typed,source):
     #     if s!=s1:total+=1
@@ -224,21 +224,26 @@ def minimum_mewtations(start, goal, limit):
     3
     """
     # assert False, 'Remove this line'
-    if limit<0: return 0; # Fill in the condition
+    if limit < 0:
+        return 0  # Fill in the condition
         # BEGIN
-        # "*** YOUR CODE HERE ***"
-        # END
-    elif not start and not goal:  return 0# Feel free to remove or add additional cases
+       # "*** YOUR CODE HERE ***"
+       # END
+    elif not start and not goal:
+        return 0  # Feel free to remove or add additional cases
         # BEGIN
-        # "*** YOUR CODE HERE ***"
-        # END
-    elif not start or not goal: return abs(len(start)-len(goal))
-    elif start[0]==goal[0]: return minimum_mewtations(start[1:],goal[1:],limit)
+       # "*** YOUR CODE HERE ***"
+       # END
+    elif not start or not goal:
+        return abs(len(start)-len(goal))
+    elif start[0] == goal[0]:
+        return minimum_mewtations(start[1:], goal[1:], limit)
     else:
-        add = minimum_mewtations(start,goal[1:],limit-1)  # Fill in these lines
-        remove = minimum_mewtations(start[1:],goal,limit-1)
-        substitute = minimum_mewtations(start[1:],goal[1:],limit-1)
-        return min(add,remove,substitute)+1
+        add = minimum_mewtations(
+            start, goal[1:], limit-1)  # Fill in these lines
+        remove = minimum_mewtations(start[1:], goal, limit-1)
+        substitute = minimum_mewtations(start[1:], goal[1:], limit-1)
+        return min(add, remove, substitute)+1
         # BEGIN
         # "*** YOUR CODE HERE ***"
         # END
@@ -284,6 +289,15 @@ def report_progress(typed, prompt, user_id, upload):
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
     # END PROBLEM 8
+    total = 0
+    for s, s1 in zip(typed, prompt):
+        if s == s1:
+            total += 1
+        else:
+            break
+    result = total/len(prompt)*1.0
+    upload({'id': user_id, 'progress': result})
+    return result
 
 
 def time_per_word(words, times_per_player):
@@ -306,6 +320,11 @@ def time_per_word(words, times_per_player):
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
     # END PROBLEM 9
+
+    tlist = []
+    for tpp in times_per_player:
+        tlist.append([tpp[i]-tpp[i-1] for i in range(1, len(tpp))])
+    return match(words, tlist)
 
 
 def fastest_words(match):
@@ -330,6 +349,18 @@ def fastest_words(match):
     # BEGIN PROBLEM 10
     "*** YOUR CODE HERE ***"
     # END PROBLEM 10
+    fastest = [[] for _ in player_indices]
+
+    for word_index in word_indices:
+        min_time, player = float('inf'), 0
+
+        for player_index in player_indices:
+            ptime=time(match, player_index, word_index)
+            if ptime < min_time:
+                min_time = ptime
+                player = player_index
+        fastest[player].append(get_word(match, word_index))
+    return fastest
 
 
 def match(words, times):
